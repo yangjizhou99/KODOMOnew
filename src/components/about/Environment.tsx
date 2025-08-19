@@ -1,7 +1,19 @@
 import { t, Lang } from '../../lib/lang'
-import gallery from '../../data/mock/gallery.json'
+import { supabaseAdmin } from '@/lib/supabaseAdmin'
 
-export default function Environment({ lang }: { lang: Lang }) {
+type Gallery = { id: string; src: string; title_zh: string; title_en: string; sort_order?: number; is_active?: boolean }
+
+export default async function Environment({ lang }: { lang: Lang }) {
+  const table = process.env.NEXT_PUBLIC_GALLERY_TABLE || process.env.GALLERY_TABLE || 'gallery_items'
+  const { data, error } = await supabaseAdmin
+    .from(table)
+    .select('id,src,title_zh,title_en,sort_order,is_active')
+    .order('sort_order', { ascending: true })
+  if (error) {
+    console.error('[Environment] fetch error:', error)
+  }
+  const gallery = (data || []) as any as Gallery[]
+  if (!gallery.length) return null
   return (
     <section className="card">
       <h2 className="font-semibold text-xl">{t(lang, '環境與設計', 'Environment & Design')}</h2>

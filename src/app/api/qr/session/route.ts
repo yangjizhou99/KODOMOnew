@@ -22,7 +22,7 @@ export async function POST(req: Request) {
       if (!data) return NextResponse.json({ error: 'invalid token' }, { status: 404 })
       table = data
     } else {
-      // MOCK：不查库，给个虚拟桌位
+      // MOCK：不查库，给个虚拟桌位（无需静态引入本地数据）
       table = { id: 'mock-table', name: 'Mock Table' }
     }
 

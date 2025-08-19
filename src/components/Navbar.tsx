@@ -28,13 +28,17 @@ export default function Navbar() {
 
   return (
     <nav className="w-full border-b">
-      <div className="container flex items-center justify-between h-14">
+      <div className="container flex flex-wrap items-center justify-between gap-2 py-2">
         <Link className="font-bold" href={withLang('/') as Route}>Kodomo 2.0</Link>
-        <div className="flex items-center">
-          {items.map(i => <NavLink key={i.href} href={i.href}>{i.label}</NavLink>)}
-          <LangSwitcher />
-          <AuthStatus />
-          <CartButton />
+        <div className="flex items-center flex-wrap gap-1 w-full md:w-auto">
+          <div className="flex items-center flex-wrap gap-1">
+            {items.map(i => <NavLink key={i.href} href={i.href}>{i.label}</NavLink>)}
+          </div>
+          <div className="flex items-center gap-1 ml-auto shrink-0">
+            <LangSwitcher />
+            <AuthStatus />
+            <CartButton />
+          </div>
         </div>
       </div>
     </nav>

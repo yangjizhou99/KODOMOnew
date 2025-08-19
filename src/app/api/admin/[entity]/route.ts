@@ -8,6 +8,8 @@ const TABLES = {
   news: { table: 'news_posts', fields: ['title_zh','title_en','excerpt_zh','excerpt_en','body_zh','body_en','cover_url','status','published_at'] },
   coupons: { table: 'coupons', fields: ['code','title_zh','title_en','desc_zh','desc_en','type','value','min_spend_cents','starts_at','ends_at','is_active'] },
   tables: { table: 'tables', fields: ['name','qrcode_token','location'] },
+  team: { table: 'team_members', fields: ['name_zh','name_en','role_zh','role_en','bio_zh','bio_en','photo','sort_order','is_active'] },
+  gallery: { table: 'gallery_items', fields: ['src','title_zh','title_en','sort_order','is_active'] },
 } as const
 
 export async function GET(req: Request, { params }: { params: { entity: string } }) {
@@ -32,12 +34,16 @@ export async function GET(req: Request, { params }: { params: { entity: string }
       else if (meta.table === 'news_posts') sel = sel.or(`title_zh.ilike.${like},title_en.ilike.${like}`)
       else if (meta.table === 'coupons') sel = sel.or(`code.ilike.${like},title_zh.ilike.${like},title_en.ilike.${like}`)
       else if (meta.table === 'tables') sel = sel.or(`name.ilike.${like},qrcode_token.ilike.${like},location.ilike.${like}`)
+      else if (meta.table === 'team_members') sel = sel.or(`name_zh.ilike.${like},name_en.ilike.${like},role_zh.ilike.${like},role_en.ilike.${like}`)
+      else if (meta.table === 'gallery_items') sel = sel.or(`title_zh.ilike.${like},title_en.ilike.${like}`)
     }
     // 默认排序
     if (meta.table === 'categories') sel = sel.order('sort_order', { ascending: true })
     else if (meta.table === 'news_posts') sel = sel.order('published_at', { ascending: false })
     else if (meta.table === 'coupons') sel = sel.order('starts_at', { ascending: false })
     else if (meta.table === 'tables') sel = sel.order('name', { ascending: true })
+    else if (meta.table === 'team_members') sel = sel.order('sort_order', { ascending: true })
+    else if (meta.table === 'gallery_items') sel = sel.order('sort_order', { ascending: true })
     else sel = sel.order('created_at', { ascending: false })
     
     const { data, error, count } = await sel.range(from, to)

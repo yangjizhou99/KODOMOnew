@@ -1,5 +1,5 @@
 import { t, Lang } from '../../lib/lang'
-import team from '../../data/mock/team.json'
+import { supabaseAdmin } from '@/lib/supabaseAdmin'
 
 type Member = {
   id: string
@@ -24,8 +24,17 @@ function Avatar({ name, photo }: { name: string; photo?: string }) {
   )
 }
 
-export default function Team({ lang }: { lang: Lang }) {
-  const list = team as Member[]
+export default async function Team({ lang }: { lang: Lang }) {
+  const table = process.env.NEXT_PUBLIC_TEAM_TABLE || process.env.TEAM_TABLE || 'team_members'
+  const { data, error } = await supabaseAdmin
+    .from(table)
+    .select('id,name_zh,name_en,role_zh,role_en,bio_zh,bio_en,photo,sort_order,is_active')
+    .order('sort_order', { ascending: true })
+  if (error) {
+    console.error('[Team] fetch error:', error)
+  }
+  const list = (data || []) as any as Member[]
+  if (!list.length) return null
   return (
     <section className="card">
       <h2 className="font-semibold text-xl">{t(lang, '團隊介紹', 'Meet the Team')}</h2>

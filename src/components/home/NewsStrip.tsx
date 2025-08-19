@@ -1,7 +1,7 @@
 import { t, Lang } from '../../lib/lang'
 import { APP_MODE } from '../../lib/config'
 import { supabase } from '../../lib/supabaseClient'
-import newsMock from '../../data/mock/news.json'
+// 注意：仅在 MOCK 模式下动态导入本地数据，避免 SUPABASE 模式静态打包
 
 type News = { id: string; title_zh: string; title_en: string; published_at?: string }
 
@@ -20,10 +20,12 @@ async function getNews(): Promise<News[]> {
     }
     
     // 降级到mock数据
-    return newsMock
+    const newsMock = (await import('../../data/mock/news.json')).default
+    return newsMock as any
   } catch (error) {
     console.error('Error fetching news in NewsStrip:', error)
-    return newsMock
+    const newsMock = (await import('../../data/mock/news.json')).default
+    return newsMock as any
   }
 }
 

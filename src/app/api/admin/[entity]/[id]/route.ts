@@ -8,6 +8,8 @@ const TABLES = {
   news: { table: 'news_posts', fields: ['title_zh','title_en','excerpt_zh','excerpt_en','body_zh','body_en','cover_url','status','published_at'] },
   coupons: { table: 'coupons', fields: ['code','title_zh','title_en','desc_zh','desc_en','type','value','min_spend_cents','starts_at','ends_at','is_active'] },
   tables: { table: 'tables', fields: ['name','qrcode_token','location'] },
+  team: { table: 'team_members', fields: ['name_zh','name_en','role_zh','role_en','bio_zh','bio_en','photo','sort_order','is_active'] },
+  gallery: { table: 'gallery_items', fields: ['src','title_zh','title_en','sort_order','is_active'] },
 } as const
 
 export async function PUT(req: Request, { params }: { params: { entity: string; id: string } }) {

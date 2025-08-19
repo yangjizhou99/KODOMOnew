@@ -23,9 +23,18 @@ export default function AuthPage() {
 
   const signInGoogle = async () => {
     if (!supabase) return alert('Supabase not configured')
+    const redirectTo = window.location.hostname === 'localhost' 
+      ? 'http://localhost:3000/member'
+      : (process.env.NEXT_PUBLIC_SITE_URL || '') + '/member'
     await supabase.auth.signInWithOAuth({
       provider: 'google',
-      options: { redirectTo: (process.env.NEXT_PUBLIC_SITE_URL || '') + '/member' }
+      options: { 
+        redirectTo,
+        queryParams: {
+          access_type: 'offline',
+          prompt: 'select_account' // 强制用户重新选择账户
+        }
+      }
     })
   }
 

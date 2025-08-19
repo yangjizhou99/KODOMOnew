@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import { APP_MODE } from '@/lib/config'
 import { supabase } from '@/lib/supabaseClient'
-import newsMock from '@/data/mock/news.json'
+// 本地数据仅在 MOCK 模式时动态导入
 
 export async function GET(req: Request) {
   try {
@@ -30,7 +30,8 @@ export async function GET(req: Request) {
     }
 
     // MOCK
-    const all = (newsMock as any[])
+    const newsMock = (await import('@/data/mock/news.json')).default as any[]
+    const all = newsMock
       .filter(n => n.status === 'published')
       .filter(n => q ? (n.title_zh?.includes(q) || n.title_en?.toLowerCase().includes(q.toLowerCase())) : true)
       .sort((a,b) => new Date(b.published_at).getTime() - new Date(a.published_at).getTime())

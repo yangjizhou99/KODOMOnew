@@ -19,5 +19,12 @@
     "name_en": "Drinks",
     "sort_order": 3,
     "is_active": true
+  },
+  {
+    "id": "4",
+    "name_zh": "甜品",
+    "name_en": "Desserts",
+    "sort_order": 4,
+    "is_active": true
   }
 ]

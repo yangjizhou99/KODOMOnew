@@ -12,7 +12,7 @@ export type Field =
 export default function CrudTable({
   entity, columns, createDefaults = {}, extraHint, renderRowActions
 }: {
-  entity: 'products'|'categories'|'news'|'coupons'|'tables',
+  entity: 'products'|'categories'|'news'|'coupons'|'tables'|'team'|'gallery',
   columns: Field[],
   createDefaults?: Record<string, any>,
   extraHint?: React.ReactNode,

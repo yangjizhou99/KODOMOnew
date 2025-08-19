@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import { APP_MODE } from '@/lib/config'
 import { supabase } from '@/lib/supabaseClient'
-import newsMock from '@/data/mock/news.json'
+// 本地数据仅在 MOCK 模式时动态导入
 
 export async function GET(_: Request, { params }: { params: { id: string } }) {
   try {
@@ -21,7 +21,8 @@ export async function GET(_: Request, { params }: { params: { id: string } }) {
     }
 
     // MOCK 支持 id 或 slug
-    const one = (newsMock as any[]).find(n => n.id === id || n.slug === id)
+    const newsMock = (await import('@/data/mock/news.json')).default as any[]
+    const one = newsMock.find(n => n.id === id || n.slug === id)
     if (!one) return NextResponse.json({ error: 'not found' }, { status: 404 })
     return NextResponse.json(one)
   } catch (e:any) {

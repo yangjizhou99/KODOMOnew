@@ -5,8 +5,6 @@ import Link from 'next/link'
 import { useCart } from '@/lib/cart'
 import CategoryBar from '@/components/menu/CategoryBar'
 import ProductCard from '@/components/ProductCard'
-import productsMock from '@/data/mock/products.json'
-import categoriesMock from '@/data/mock/categories.json'
 import { APP_MODE } from '@/lib/config'
 import { supabase } from '@/lib/supabaseClient'
 
@@ -103,9 +101,14 @@ export default function QRPage() {
     async function load() {
       if (APP_MODE === 'SUPABASE') {
         if (!supabase) return
-        const { data: cats } = await supabase.from('categories').select('*').eq('is_active', true).order('sort_order', { ascending: true })
+        // 通过后端接口由服务端使用 Admin 权限读取全量分类，避免 RLS/匿名策略影响
+        const catsRes = await fetch('/api/public/categories', { cache: 'no-store' })
+        const catsJson = catsRes.ok ? await catsRes.json() : { items: [] }
+        const cats = catsJson.items as Category[]
+        const onlyActive = process.env.NEXT_PUBLIC_SHOW_ONLY_ACTIVE_CATEGORIES === 'true'
+        const catsFiltered = (cats || []).filter(c => !onlyActive || c.is_active)
         const { data: prods } = await supabase.from('products').select('*').eq('is_active', true)
-        setCategories(cats || [])
+        setCategories(catsFiltered as any)
         setProducts(prods || [])
         const soldOutMap = Object.fromEntries((prods||[]).map(p => [p.id, !!p.is_sold_out]))
         setSoldOutMap(soldOutMap)
@@ -118,9 +121,14 @@ export default function QRPage() {
           soldOutMap
         })
       } else {
-        console.log('[QRPage] 使用MOCK数据:', { categoriesMock, productsMock })
-        setCategories(categoriesMock as any)
-        setProducts(productsMock as any)
+        // MOCK 模式按需动态导入，避免在 SUPABASE 模式下静态引用本地数据
+        const [cats, prods] = await Promise.all([
+          import('@/data/mock/categories.json').then(m => m.default),
+          import('@/data/mock/products.json').then(m => m.default)
+        ])
+        console.log('[QRPage] 使用MOCK数据:', { catsLen: cats.length, prodsLen: prods.length })
+        setCategories(cats as any)
+        setProducts(prods as any)
         setSoldOutMap({})
       }
     }
