@@ -4,10 +4,16 @@ import { supabase } from '@/lib/supabaseClient'
 import productsMock from '@/data/mock/products.json'
 
 async function getProducts() {
-  if (APP_MODE === 'SUPABASE') {
-    const { data, error } = await supabase.from('products').select('*').eq('is_active', true)
-    if (error) throw error
-    return data
+  if (APP_MODE === 'SUPABASE' && supabase) {
+    try {
+      const { data, error } = await supabase.from('products').select('*').eq('is_active', true)
+      if (error) throw error
+      return data
+    } catch (error) {
+      console.error('Error fetching products from database:', error)
+      // 发生错误时返回mock数据
+      return productsMock
+    }
   }
   return productsMock
 }
