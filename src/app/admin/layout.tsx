@@ -8,6 +8,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     { href: '/admin/categories' as const, label: '分類' },
     { href: '/admin/news' as const, label: '新聞' },
     { href: '/admin/coupons' as const, label: '優惠券' },
+    { href: '/admin/tables' as const, label: '桌位' },
   ]
   return (
     <AdminGate>

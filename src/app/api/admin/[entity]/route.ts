@@ -7,6 +7,7 @@ const TABLES = {
   products: { table: 'products', fields: ['category_id','name_zh','name_en','desc_zh','desc_en','price_cents','image_url','is_active','is_sold_out','sku'] },
   news: { table: 'news_posts', fields: ['title_zh','title_en','excerpt_zh','excerpt_en','body_zh','body_en','cover_url','status','published_at'] },
   coupons: { table: 'coupons', fields: ['code','title_zh','title_en','desc_zh','desc_en','type','value','min_spend_cents','starts_at','ends_at','is_active'] },
+  tables: { table: 'tables', fields: ['name','qrcode_token','location'] },
 } as const
 
 export async function GET(req: Request, { params }: { params: { entity: string } }) {
@@ -30,11 +31,13 @@ export async function GET(req: Request, { params }: { params: { entity: string }
       else if (meta.table === 'categories') sel = sel.or(`name_zh.ilike.${like},name_en.ilike.${like}`)
       else if (meta.table === 'news_posts') sel = sel.or(`title_zh.ilike.${like},title_en.ilike.${like}`)
       else if (meta.table === 'coupons') sel = sel.or(`code.ilike.${like},title_zh.ilike.${like},title_en.ilike.${like}`)
+      else if (meta.table === 'tables') sel = sel.or(`name.ilike.${like},qrcode_token.ilike.${like},location.ilike.${like}`)
     }
     // 默认排序
     if (meta.table === 'categories') sel = sel.order('sort_order', { ascending: true })
     else if (meta.table === 'news_posts') sel = sel.order('published_at', { ascending: false })
     else if (meta.table === 'coupons') sel = sel.order('starts_at', { ascending: false })
+    else if (meta.table === 'tables') sel = sel.order('name', { ascending: true })
     else sel = sel.order('created_at', { ascending: false })
     
     const { data, error, count } = await sel.range(from, to)

@@ -10,12 +10,13 @@ export type Field =
   | { key: string; label: string; type: 'datetime' }
 
 export default function CrudTable({
-  entity, columns, createDefaults = {}, extraHint
+  entity, columns, createDefaults = {}, extraHint, renderRowActions
 }: {
-  entity: 'products'|'categories'|'news'|'coupons',
+  entity: 'products'|'categories'|'news'|'coupons'|'tables',
   columns: Field[],
   createDefaults?: Record<string, any>,
-  extraHint?: React.ReactNode
+  extraHint?: React.ReactNode,
+  renderRowActions?: (row: any) => React.ReactNode
 }) {
   const [items, setItems] = useState<any[]>([])
   const [q, setQ] = useState('')
@@ -106,6 +107,9 @@ export default function CrudTable({
                   </td>
                 ))}
                 <td className="px-3 py-2 text-right whitespace-nowrap">
+                  {renderRowActions ? (
+                    <span className="mr-3 inline-flex items-center gap-2">{renderRowActions(row)}</span>
+                  ) : null}
                   <button className="text-blue-600 mr-3" onClick={() => startEdit(row)}>編輯</button>
                   <button className="text-red-600" onClick={() => del(row)}>刪除</button>
                 </td>

@@ -7,6 +7,7 @@ const TABLES = {
   products: { table: 'products', fields: ['category_id','name_zh','name_en','desc_zh','desc_en','price_cents','image_url','is_active','is_sold_out','sku'] },
   news: { table: 'news_posts', fields: ['title_zh','title_en','excerpt_zh','excerpt_en','body_zh','body_en','cover_url','status','published_at'] },
   coupons: { table: 'coupons', fields: ['code','title_zh','title_en','desc_zh','desc_en','type','value','min_spend_cents','starts_at','ends_at','is_active'] },
+  tables: { table: 'tables', fields: ['name','qrcode_token','location'] },
 } as const
 
 export async function PUT(req: Request, { params }: { params: { entity: string; id: string } }) {
