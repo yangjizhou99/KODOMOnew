@@ -19,9 +19,13 @@ export default function QRPage() {
   const sp = useSearchParams()
   const lang = (sp.get('lang') === 'en' ? 'en' : 'zh-TW') as 'zh-TW'|'en'
 
-  const { setCtx, ctx, isLoaded } = useCart()
+  const { isLoaded } = useCart()
   const [tableName, setTableName] = useState<string>('—')
   const [fulfillment, setFulfillment] = useState<'dine_in'|'takeout'>('dine_in')
+  const [orderContext, setOrderContext] = useState<{channel: string, tableId: string | null}>({
+    channel: 'qr',
+    tableId: null
+  })
 
   const [categories, setCategories] = useState<Category[]>([])
   const [products, setProducts] = useState<Product[]>([])
@@ -34,12 +38,12 @@ export default function QRPage() {
     console.log('[QRPage] useEffect triggered:', { 
       token, 
       isLoaded, 
-      ctxChannel: ctx.channel,
-      ctxTableId: ctx.tableId
+      ctxChannel: orderContext.channel,
+      ctxTableId: orderContext.tableId
     })
     
     // 如果已经是QR模式且tableId正确，只需要获取桌位名称，不需要重新设置上下文
-    if (ctx.channel === 'qr' && ctx.tableId) {
+    if (orderContext.channel === 'qr' && orderContext.tableId) {
       console.log('[QRPage] Already in QR mode with tableId, only fetching table name')
       async function fetchTableName() {
         try {
@@ -69,17 +73,25 @@ export default function QRPage() {
       if (!res.ok) { alert(json.error || '無效的桌位'); router.replace('/'); return }
       setTableName(json.table?.name || 'Table')
       
-      console.log('[QRPage] About to setCtx:', { 
-        currentCtx: JSON.stringify(ctx),
+      console.log('[QRPage] About to setOrderContext:', { 
+        currentCtx: JSON.stringify(orderContext),
         newValues: JSON.stringify({ channel: 'qr', tableId: json.table?.id || null })
       })
       
       // 更新下单上下文 - 只更新QR相关字段，保持其他字段
-      setCtx({ 
+      setOrderContext({ 
         channel: 'qr', 
         tableId: json.table?.id || null 
-        // 不设置 fulfillment，让它保持现有值或使用默认值
       })
+      
+      // 保存到localStorage用于状态持久化
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('kodomo_order_ctx_v1', JSON.stringify({
+          channel: 'qr',
+          tableId: json.table?.id || null,
+          fulfillment
+        }))
+      }
     }
     bind()
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -130,7 +142,15 @@ export default function QRPage() {
   }, [])
 
   useEffect(() => {
-    setCtx({ fulfillment })
+    // 保存fulfillment到localStorage
+    if (typeof window !== 'undefined') {
+      const existingCtx = localStorage.getItem('kodomo_order_ctx_v1')
+      const ctx = existingCtx ? JSON.parse(existingCtx) : {}
+      localStorage.setItem('kodomo_order_ctx_v1', JSON.stringify({
+        ...ctx,
+        fulfillment
+      }))
+    }
   }, [fulfillment])
 
   const list = useMemo(() => cat === 'all' ? products : products.filter(p => p.category_id === cat), [cat, products])
@@ -163,7 +183,7 @@ export default function QRPage() {
       <CategoryBar categories={categories as any} onChange={setCat} />
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {list.map((p) => (
-          <ProductCard key={p.id} p={p as any} lang={lang} soldOut={!!soldOutMap[p.id]} />
+          <ProductCard key={p.id} p={p as any} lang={lang} />
         ))}
       </div>
     </div>
