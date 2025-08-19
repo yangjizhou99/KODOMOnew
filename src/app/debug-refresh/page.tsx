@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import { useCart } from '@/lib/cart'
 
 export default function DebugRefreshPage() {
-  const { items, count, ctx, isLoaded } = useCart()
+  const { items, count, currency, isLoaded } = useCart()
   const [localStorageData, setLocalStorageData] = useState<any>({})
 
   useEffect(() => {
@@ -29,9 +29,9 @@ export default function DebugRefreshPage() {
           <div className="space-y-2 text-sm">
             <p><strong>isLoaded:</strong> {String(isLoaded)}</p>
             <p><strong>商品数量:</strong> {count}</p>
-            <p><strong>上下文:</strong></p>
+            <p><strong>货币类型:</strong></p>
             <pre className="bg-gray-100 p-2 rounded text-xs">
-              {JSON.stringify(ctx, null, 2)}
+              {currency}
             </pre>
             <p><strong>商品列表:</strong></p>
             <pre className="bg-gray-100 p-2 rounded text-xs max-h-32 overflow-auto">
@@ -52,7 +52,7 @@ export default function DebugRefreshPage() {
             </div>
             
             <div>
-              <strong>上下文数据:</strong>
+              <strong>订单上下文数据:</strong>
               <pre className="bg-gray-100 p-2 rounded text-xs max-h-32 overflow-auto">
                 {JSON.stringify(localStorageData.ctx, null, 2)}
               </pre>
