@@ -4,7 +4,7 @@ import { useCart } from '@/lib/cart'
 import Link from 'next/link'
 
 export default function SimpleTestPage() {
-  const { items, count, add, clear, ctx, isLoaded } = useCart()
+  const { items, count, add, clear, currency, isLoaded } = useCart()
 
   // 监听localStorage变化
   useEffect(() => {
@@ -42,7 +42,7 @@ export default function SimpleTestPage() {
     isLoaded, 
     count, 
     itemsLength: items.length, 
-    ctx,
+    currency,
     actualCartData,
     actualCtxData
   })
@@ -55,7 +55,8 @@ export default function SimpleTestPage() {
         <h2 className="font-semibold mb-3">购物车状态</h2>
         <p>isLoaded: {String(isLoaded)}</p>
         <p>商品数量: {count}</p>
-        <p>上下文: {JSON.stringify(ctx)}</p>
+        <p>货币类型: {currency}</p>
+        <p>localStorage上下文: {actualCtxData || '无'}</p>
       </div>
 
       <div className="space-x-4 mb-6">
