@@ -18,8 +18,8 @@ async function getDebugInfo() {
     databaseData: {
       categories: 0,
       products: 0,
-      categoriesData: [],
-      productsData: [],
+      categoriesData: [] as any[],
+      productsData: [] as any[],
       error: null as string | null
     }
   }
