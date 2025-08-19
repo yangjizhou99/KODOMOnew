@@ -1,7 +1,22 @@
-import ProductCard from '@/components/ProductCard'
 import { APP_MODE } from '@/lib/config'
 import { supabase } from '@/lib/supabaseClient'
 import productsMock from '@/data/mock/products.json'
+import categoriesMock from '@/data/mock/categories.json'
+import FilterableGrid from '@/components/menu/FilterableGrid'
+
+async function getCategories() {
+  if (APP_MODE === 'SUPABASE' && supabase) {
+    try {
+      const { data, error } = await supabase.from('categories').select('*').eq('is_active', true).order('sort_order',{ascending:true})
+      if (error) throw error
+      return data
+    } catch (error) {
+      console.error('Error fetching categories:', error)
+      return categoriesMock
+    }
+  }
+  return categoriesMock
+}
 
 async function getProducts() {
   if (APP_MODE === 'SUPABASE' && supabase) {
@@ -10,8 +25,7 @@ async function getProducts() {
       if (error) throw error
       return data
     } catch (error) {
-      console.error('Error fetching products from database:', error)
-      // 发生错误时返回mock数据
+      console.error('Error fetching products:', error)
       return productsMock
     }
   }
@@ -19,13 +33,12 @@ async function getProducts() {
 }
 
 export default async function MenuPage() {
-  const products = await getProducts()
+  const [categories, products] = await Promise.all([getCategories(), getProducts()])
+
   return (
     <div>
       <h1 className="text-2xl font-bold mb-4">菜單 / Menu</h1>
-      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {products.map((p: any) => <ProductCard key={p.id} p={p} />)}
-      </div>
+      <FilterableGrid categories={categories} products={products} />
     </div>
   )
 }
