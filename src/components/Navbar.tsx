@@ -2,9 +2,10 @@
 import Link from 'next/link'
 import { usePathname, useSearchParams } from 'next/navigation'
 import { useMemo } from 'react'
+import { Route } from 'next'
 
 const NavLink = ({ href, children }: { href: string; children: React.ReactNode }) => (
-  <Link className="px-3 py-2 hover:underline" href={href}>{children}</Link>
+  <Link className="px-3 py-2 hover:underline" href={href as Route}>{children}</Link>
 )
 
 export default function Navbar() {
@@ -25,7 +26,7 @@ export default function Navbar() {
   return (
     <nav className="w-full border-b">
       <div className="container flex items-center justify-between h-14">
-        <Link className="font-bold" href={withLang('/')}>Kodomo 2.0</Link>
+        <Link className="font-bold" href={withLang('/') as Route}>Kodomo 2.0</Link>
         <div className="flex items-center">
           {items.map(i => <NavLink key={i.href} href={i.href}>{i.label}</NavLink>)}
           <LangSwitcher />
@@ -44,7 +45,7 @@ function LangSwitcher() {
   sp.set('lang', other)
   const href = `${pathname}?${sp.toString()}`
   return (
-    <Link href={href} className="ml-2 text-sm border rounded px-2 py-1">
+    <Link href={href as Route} className="ml-2 text-sm border rounded px-2 py-1">
       {lang === 'en' ? '中文' : 'EN'}
     </Link>
   )
