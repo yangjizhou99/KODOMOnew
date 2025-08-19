@@ -1,14 +1,19 @@
-export default function Contact() {
+import ContactForm from '../../components/contact/ContactForm'
+import ContactMap from '../../components/home/ContactMap'
+import { getLangFromSearchParams, Lang } from '../../lib/lang'
+
+export default function ContactPage({ searchParams }:{ searchParams: any }) {
+  const lang: Lang = getLangFromSearchParams(searchParams)
   return (
-    <div className="card">
-      <h1 className="text-2xl font-bold mb-2">聯絡我們 / Contact</h1>
-      <p className="text-gray-600">地址 / 電話 / Email / Google Map</p>
-      <form className="mt-4 grid gap-3 max-w-md">
-        <input className="border rounded px-3 py-2" placeholder="姓名 / Name" />
-        <input className="border rounded px-3 py-2" placeholder="Email" />
-        <textarea className="border rounded px-3 py-2" placeholder="留言 / Message" rows={4} />
-        <button className="btn btn-primary w-full">送出 / Send</button>
-      </form>
+    <div className="grid lg:grid-cols-2 gap-6">
+      <div className="space-y-6">
+        {/* 店铺信息 + 地图（任务 1 已提供的组件） */}
+        <ContactMap lang={lang} />
+        {/* 如需补充：营业时间/发票抬头/交通方式等，可再加 card */}
+      </div>
+      <div>
+        <ContactForm lang={lang} />
+      </div>
     </div>
   )
 }
