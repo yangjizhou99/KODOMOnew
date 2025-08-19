@@ -1,14 +1,28 @@
 [
   {
-    "id": "n1",
-    "title_zh": "新品上市：台式卤肉饭套餐",
-    "title_en": "New: Taiwanese Braised Pork Set",
-    "published_at": "2025-08-01T09:00:00Z"
+    "id": "n2",
+    "slug": "taro-milk-tea-bogo",
+    "title_zh": "中秋節限定：芋頭奶茶買一送一",
+    "title_en": "Mid-Autumn: Taro Milk Tea BOGO",
+    "excerpt_zh": "限時一週，來店或外帶皆可使用。",
+    "excerpt_en": "One-week only, dine-in & takeout.",
+    "cover_url": "https://images.unsplash.com/photo-1541976076758-347942db1974",
+    "body_zh": "芋頭奶茶買一送一活動開跑！\n\n凡點大杯芋頭奶茶即可再享同品項贈送乙杯。",
+    "body_en": "Taro Milk Tea BOGO is live!\n\nBuy one large taro milk tea, get one free.",
+    "status": "published",
+    "published_at": "2025-08-15T09:00:00Z"
   },
   {
-    "id": "n2",
-    "title_zh": "中秋節限定：芋頭奶茶買一送一",
-    "title_en": "Mid-Autumn Special: Taro Milk Tea BOGO",
-    "published_at": "2025-08-15T09:00:00Z"
+    "id": "n1",
+    "slug": "braised-pork-set",
+    "title_zh": "新品上市：台式滷肉飯套餐",
+    "title_en": "New: Braised Pork Set",
+    "excerpt_zh": "家常滷肉、半熟蛋與時蔬，外帶友善包裝。",
+    "excerpt_en": "Comfort pork belly, soft egg, veggies; takeout-friendly.",
+    "cover_url": "https://images.unsplash.com/photo-1604908176997-4316526f0a62",
+    "body_zh": "我們將經典滷肉升級，使用三段式滷法，香而不膩。\n\n搭配半熟蛋與時蔬，營養均衡。",
+    "body_en": "Our classic lu-rou-fan is upgraded with 3-stage braise.\n\nServed with soft-boiled egg and seasonal greens.",
+    "status": "published",
+    "published_at": "2025-08-01T09:00:00Z"
   }
 ]
