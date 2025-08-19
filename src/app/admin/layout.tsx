@@ -2,11 +2,11 @@ import AdminGate from '../../components/admin/AdminGate'
 import Link from 'next/link'
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
-  const nav: { href: string; label: string }[] = [
-    { href: '/admin/products', label: '商品' },
-    { href: '/admin/categories', label: '分類' },
-    { href: '/admin/news', label: '新聞' },
-    { href: '/admin/coupons', label: '優惠券' },
+  const nav = [
+    { href: '/admin/products' as const, label: '商品' },
+    { href: '/admin/categories' as const, label: '分類' },
+    { href: '/admin/news' as const, label: '新聞' },
+    { href: '/admin/coupons' as const, label: '優惠券' },
   ]
   return (
     <AdminGate>
