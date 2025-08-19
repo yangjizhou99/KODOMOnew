@@ -20,7 +20,7 @@ async function getDebugInfo() {
       products: 0,
       categoriesData: [],
       productsData: [],
-      error: null
+      error: null as string | null
     }
   }
 
