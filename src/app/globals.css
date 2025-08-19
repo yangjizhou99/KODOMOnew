@@ -1,0 +1,22 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --ring: 0 0% 9%;
+}
+
+* { box-sizing: border-box; }
+body { @apply bg-surface-subtle text-gray-900 antialiased; }
+
+.container { @apply max-w-6xl mx-auto px-4; }
+
+/* Primitives */
+.card { @apply rounded-2xl bg-white shadow-soft p-4; }
+.btn { @apply inline-flex items-center justify-center rounded-xl px-4 py-2 font-medium border; }
+.btn-primary { @apply bg-brand text-brand-foreground border-brand; }
+.btn-outline { @apply bg-white border-gray-300 hover:bg-gray-50; }
+.link { @apply underline; }
+
+/* Focus ring */
+:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(17,24,39,.2); border-radius: 10px; }
