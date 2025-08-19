@@ -1,12 +1,30 @@
 import { t, Lang } from '../../lib/lang'
+import { APP_MODE } from '../../lib/config'
+import { supabase } from '../../lib/supabaseClient'
+import newsMock from '../../data/mock/news.json'
 
 type News = { id: string; title_zh: string; title_en: string; published_at?: string }
 
 async function getNews(): Promise<News[]> {
-  const base = process.env.NEXT_PUBLIC_SITE_URL || ''
-  const res = await fetch(`${base}/api/news`, { next: { revalidate: 60 } })
-  if (!res.ok) return []
-  return res.json()
+  try {
+    if (APP_MODE === 'SUPABASE' && supabase) {
+      const { data, error } = await supabase
+        .from('news_posts')
+        .select('id,title_zh,title_en,published_at,status')
+        .eq('status', 'published')
+        .order('published_at', { ascending: false })
+        .limit(6)
+      if (!error && data) {
+        return data
+      }
+    }
+    
+    // 降级到mock数据
+    return newsMock
+  } catch (error) {
+    console.error('Error fetching news in NewsStrip:', error)
+    return newsMock
+  }
 }
 
 export default async function NewsStrip({ lang }: { lang: Lang }) {
