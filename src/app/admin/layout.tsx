@@ -1,5 +1,6 @@
 import AdminGate from '../../components/admin/AdminGate'
 import Link from 'next/link'
+import { Route } from 'next'
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const nav = [
@@ -13,7 +14,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       <div className="container py-6 space-y-6">
         <div className="card">
           <div className="flex gap-3 flex-wrap">
-            {nav.map(n => <Link key={n.href} className="px-3 py-2 rounded border hover:bg-gray-50" href={n.href}>{n.label}</Link>)}
+            {nav.map(n => <Link key={n.href} className="px-3 py-2 rounded border hover:bg-gray-50" href={n.href as Route}>{n.label}</Link>)}
           </div>
         </div>
         {children}
