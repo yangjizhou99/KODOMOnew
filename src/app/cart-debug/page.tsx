@@ -9,9 +9,9 @@ export default function CartDebugPage() {
 
   // 监控购物车状态变化
   useEffect(() => {
-    const log = `[${new Date().toLocaleTimeString()}] Cart state - isLoaded: ${cart.isLoaded}, items: ${cart.count}, ctx: ${JSON.stringify(cart.ctx)}`
+    const log = `[${new Date().toLocaleTimeString()}] Cart state - isLoaded: ${cart.isLoaded}, items: ${cart.count}, currency: ${cart.currency}`
     setLogs(prev => [...prev, log])
-  }, [cart.isLoaded, cart.count, cart.ctx])
+  }, [cart.isLoaded, cart.count, cart.currency])
 
   // 定期检查localStorage
   useEffect(() => {
@@ -85,9 +85,9 @@ export default function CartDebugPage() {
             <p><strong>购物车打开:</strong> {String(cart.open)}</p>
             
             <div className="mt-3">
-              <strong>上下文:</strong>
+              <strong>货币类型:</strong>
               <pre className="bg-gray-100 p-2 rounded text-xs mt-1">
-                {JSON.stringify(cart.ctx, null, 2)}
+                {cart.currency}
               </pre>
             </div>
             
