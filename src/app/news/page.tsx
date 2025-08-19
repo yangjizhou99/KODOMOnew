@@ -1,4 +1,7 @@
 import { getLangFromSearchParams, Lang, t } from '../../lib/lang'
+import { APP_MODE } from '../../lib/config'
+import { supabase } from '../../lib/supabaseClient'
+import newsMock from '../../data/mock/news.json'
 
 type News = { 
   id: string; 
@@ -11,13 +14,26 @@ type News = {
 }
 
 async function getNews(): Promise<News[]> {
-  const base = process.env.NEXT_PUBLIC_SITE_URL || ''
-  const res = await fetch(`${base}/api/news`, { 
-    next: { revalidate: 60 },
-    cache: 'no-store' // 确保获取最新数据
-  })
-  if (!res.ok) return []
-  return res.json()
+  try {
+    if (APP_MODE === 'SUPABASE' && supabase) {
+      const { data, error } = await supabase
+        .from('news_posts')
+        .select('id,title_zh,title_en,body_zh,body_en,published_at,status,cover_url')
+        .eq('status', 'published')
+        .order('published_at', { ascending: false })
+        .limit(20) // 新闻页面显示更多内容
+      if (!error && data) {
+        return data
+      }
+    }
+    
+    // 降级到mock数据
+    return newsMock
+  } catch (error) {
+    console.error('Error fetching news:', error)
+    // 返回mock数据作为备用
+    return newsMock
+  }
 }
 
 export default async function News({

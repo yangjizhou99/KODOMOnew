@@ -1,8 +1,24 @@
-export default function About() {
+import AboutHero from '../../components/about/AboutHero'
+import Story from '../../components/about/Story'
+import Philosophy from '../../components/about/Philosophy'
+import Environment from '../../components/about/Environment'
+import Team from '../../components/about/Team'
+import { getLangFromSearchParams, Lang } from '../../lib/lang'
+
+export default function AboutPage({
+  searchParams
+}: {
+  searchParams: { [key: string]: string | string[] | undefined }
+}) {
+  const lang: Lang = getLangFromSearchParams(searchParams)
+
   return (
-    <div className="prose">
-      <h1>關於我們 / About Us</h1>
-      <p>品牌故事與餐廳理念的佔位內容。</p>
+    <div className="space-y-8">
+      <AboutHero lang={lang} />
+      <Story lang={lang} />
+      <Philosophy lang={lang} />
+      <Environment lang={lang} />
+      <Team lang={lang} />
     </div>
   )
 }
