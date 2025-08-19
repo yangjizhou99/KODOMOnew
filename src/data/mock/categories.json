@@ -1,0 +1,23 @@
+[
+  {
+    "id": "1",
+    "name_zh": "主餐",
+    "name_en": "Main Dishes",
+    "sort_order": 1,
+    "is_active": true
+  },
+  {
+    "id": "2", 
+    "name_zh": "小食",
+    "name_en": "Snacks",
+    "sort_order": 2,
+    "is_active": true
+  },
+  {
+    "id": "3",
+    "name_zh": "飲品",
+    "name_en": "Drinks",
+    "sort_order": 3,
+    "is_active": true
+  }
+]
