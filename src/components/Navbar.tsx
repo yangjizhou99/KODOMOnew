@@ -4,6 +4,7 @@ import { usePathname, useSearchParams } from 'next/navigation'
 import { useMemo } from 'react'
 import { Route } from 'next'
 import CartButton from '@/components/cart/CartButton'
+import AuthStatus from '@/components/AuthStatus'
 
 const NavLink = ({ href, children }: { href: string; children: React.ReactNode }) => (
   <Link className="px-3 py-2 hover:underline" href={href as Route}>{children}</Link>
@@ -32,6 +33,7 @@ export default function Navbar() {
         <div className="flex items-center">
           {items.map(i => <NavLink key={i.href} href={i.href}>{i.label}</NavLink>)}
           <LangSwitcher />
+          <AuthStatus />
           <CartButton />
         </div>
       </div>
