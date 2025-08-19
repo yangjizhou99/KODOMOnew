@@ -11,13 +11,27 @@ type News = {
 }
 
 async function getNews(): Promise<News[]> {
-  const base = process.env.NEXT_PUBLIC_SITE_URL || ''
-  const res = await fetch(`${base}/api/news`, { 
-    next: { revalidate: 60 },
-    cache: 'no-store' // 确保获取最新数据
-  })
-  if (!res.ok) return []
-  return res.json()
+  try {
+    // 在服务器端渲染时使用相对路径
+    const base = process.env.NEXT_PUBLIC_SITE_URL || (typeof window === 'undefined' ? 'http://localhost:3000' : '')
+    const url = base ? `${base}/api/news` : '/api/news'
+    
+    const res = await fetch(url, { 
+      next: { revalidate: 60 },
+      cache: 'no-store' // 确保获取最新数据
+    })
+    
+    if (!res.ok) {
+      console.error('Failed to fetch news:', res.status, res.statusText)
+      return []
+    }
+    
+    const data = await res.json()
+    return Array.isArray(data) ? data : []
+  } catch (error) {
+    console.error('Error fetching news:', error)
+    return []
+  }
 }
 
 export default async function News({
