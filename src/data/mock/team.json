@@ -1,0 +1,32 @@
+[
+  {
+    "id": "t1",
+    "name_zh": "陳主廚",
+    "name_en": "Chef Chen",
+    "role_zh": "行政主廚",
+    "role_en": "Head Chef",
+    "bio_zh": "專注台式家常與創新拼盤，15年餐飲經驗。",
+    "bio_en": "Focuses on Taiwanese comfort classics and creative platters; 15 years experience.",
+    "photo": ""
+  },
+  {
+    "id": "t2",
+    "name_zh": "林副主廚",
+    "name_en": "Sous Chef Lin",
+    "role_zh": "副主廚",
+    "role_en": "Sous Chef",
+    "bio_zh": "擅長滷與炸的火候，標準化出餐流程。",
+    "bio_en": "Masters braising & frying; champions standardized pass.",
+    "photo": ""
+  },
+  {
+    "id": "t3",
+    "name_zh": "王店長",
+    "name_en": "Manager Wang",
+    "role_zh": "店長",
+    "role_en": "Store Manager",
+    "bio_zh": "服務控與數據控，熱愛把顧客回饋轉成改進清單。",
+    "bio_en": "Service & data driven; turns feedback into action.",
+    "photo": ""
+  }
+]

@@ -16,6 +16,7 @@ export default function Navbar() {
 
   const items = useMemo(() => [
     { href: withLang('/'), label: lang === 'en' ? 'Home' : '首頁' },
+    { href: withLang('/about'), label: lang === 'en' ? 'About' : '關於我們' },
     { href: withLang('/menu'), label: lang === 'en' ? 'Menu' : '菜單' },
     { href: withLang('/member'), label: lang === 'en' ? 'Member' : '會員' },
     { href: withLang('/news'), label: lang === 'en' ? 'News' : '最新消息' },
