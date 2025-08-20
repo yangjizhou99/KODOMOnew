@@ -10,6 +10,12 @@ export default function TestAuthPage() {
   useEffect(() => {
     async function checkAuth() {
       try {
+        if (!supabase) {
+          console.error('Supabase client is not initialized')
+          setLoading(false)
+          return
+        }
+        
         const { data: { session } } = await supabase.auth.getSession()
         setSession(session)
         
@@ -29,6 +35,11 @@ export default function TestAuthPage() {
 
   const testApiCall = async () => {
     try {
+      if (!supabase) {
+        alert('Supabase client is not initialized')
+        return
+      }
+      
       const { data: { session } } = await supabase.auth.getSession()
       const headers = { 
         'Content-Type': 'application/json', 
@@ -50,6 +61,15 @@ export default function TestAuthPage() {
   }
 
   if (loading) return <div>检查认证状态中...</div>
+
+  if (!supabase) {
+    return (
+      <div className="p-8">
+        <h1 className="text-2xl font-bold text-red-600">错误</h1>
+        <p className="text-red-500">Supabase 客户端未初始化，请检查环境变量配置。</p>
+      </div>
+    )
+  }
 
   return (
     <div className="p-8 space-y-4">
