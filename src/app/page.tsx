@@ -17,10 +17,8 @@ export default function Home({
   return (
     <div className="space-y-8">
       {/* 扫码落首页时，自动绑定桌位 Session */}
-      {/* @ts-expect-error Client component in server tree */}
       <QrCapture />
       <Hero lang={lang} qrToken={qrToken} />
-      {/* @ts-expect-error Async Server Component */}
       <NewsStrip lang={lang} />
       <QuickActions lang={lang} qrToken={qrToken} />
       <ContactMap lang={lang} />
