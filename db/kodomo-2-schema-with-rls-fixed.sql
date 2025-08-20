@@ -110,7 +110,7 @@ create table if not exists tables (
 create table if not exists orders (
   id uuid primary key default gen_random_uuid(),
   channel order_channel not null default 'web',
-  table_id uuid references tables(id),
+  table_id uuid references tables(id) on delete cascade,
   member_id uuid references members(id),
   status order_status not null default 'pending',
   fulfillment order_fulfillment not null default 'dine_in',

@@ -8,8 +8,6 @@ export async function POST(req: Request) {
     const { token } = await req.json()
     if (!token) return NextResponse.json({ error: 'missing token' }, { status: 400 })
 
-
-
     let table: { id: string; name: string | null } | null = null
 
     if (APP_MODE === 'SUPABASE') {
@@ -22,8 +20,8 @@ export async function POST(req: Request) {
       if (!data) return NextResponse.json({ error: 'invalid token' }, { status: 404 })
       table = data
     } else {
-      // MOCK：不查库，给个虚拟桌位（无需静态引入本地数据）
-      table = { id: 'mock-table', name: 'Mock Table' }
+      // MOCK：接受任何token，给个虚拟桌位
+      table = { id: `mock-table-${token}`, name: `Table ${token}` }
     }
 
     // 绑定到 HttpOnly Cookie（2 小时）
@@ -34,6 +32,7 @@ export async function POST(req: Request) {
     })
     return res
   } catch (e: any) {
+    console.error('QR session error:', e)
     return NextResponse.json({ error: e.message ?? 'session error' }, { status: 500 })
   }
 }
