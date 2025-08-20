@@ -32,12 +32,37 @@ export default function CrudTable({
   const fetchList = async (p = page) => {
     if (!supabase) { alert('Supabase not configured'); return }
     const { data: { session } } = await supabase.auth.getSession()
-    const res = await fetch(`/api/admin/${entity}?q=${encodeURIComponent(q)}&page=${p}&pageSize=${pageSize}`, {
-      headers: { Authorization: `Bearer ${session?.access_token}` }
-    })
-    const json = await res.json()
-    if (res.ok) { setItems(json.items || []); setTotal(json.total || 0); setPage(json.page || 1) }
-    else alert(json.error || 'load error')
+    if (!session?.access_token) {
+      alert('请先登录')
+      return
+    }
+    
+    try {
+      const res = await fetch(`/api/admin/${entity}?q=${encodeURIComponent(q)}&page=${p}&pageSize=${pageSize}`, {
+        headers: { Authorization: `Bearer ${session.access_token}` }
+      })
+      
+      // 检查响应类型
+      const contentType = res.headers.get('content-type')
+      if (!contentType || !contentType.includes('application/json')) {
+        const text = await res.text()
+        console.error('Non-JSON response:', text)
+        alert(`服务器返回了非JSON响应 (${res.status}): ${text.substring(0, 100)}...`)
+        return
+      }
+      
+      const json = await res.json()
+      if (res.ok) { 
+        setItems(json.items || []); 
+        setTotal(json.total || 0); 
+        setPage(json.page || 1) 
+      } else {
+        alert(json.error || `加载失败 (${res.status})`)
+      }
+    } catch (e: any) {
+      console.error('Fetch list error:', e)
+      alert(`加载失败: ${e.message}`)
+    }
   }
 
   useEffect(() => { fetchList(1) }, []) // init
@@ -50,16 +75,32 @@ export default function CrudTable({
     try {
       if (!supabase) { alert('Supabase not configured'); return }
       const { data: { session } } = await supabase.auth.getSession()
-      const headers = { 'Content-Type': 'application/json', Authorization: `Bearer ${session?.access_token}` }
+      if (!session?.access_token) {
+        alert('请先登录')
+        return
+      }
+      
+      const headers = { 'Content-Type': 'application/json', Authorization: `Bearer ${session.access_token}` }
       let res: Response
       if (editing) res = await fetch(`/api/admin/${entity}/${editing.id}`, { method: 'PUT', headers, body: JSON.stringify(form) })
       else res = await fetch(`/api/admin/${entity}`, { method: 'POST', headers, body: JSON.stringify(form) })
+      
+      // 检查响应类型
+      const contentType = res.headers.get('content-type')
+      if (!contentType || !contentType.includes('application/json')) {
+        const text = await res.text()
+        console.error('Non-JSON response:', text)
+        throw new Error(`服务器返回了非JSON响应 (${res.status}): ${text.substring(0, 100)}...`)
+      }
+      
       const json = await res.json()
-      if (!res.ok) throw new Error(json.error || 'save error')
+      if (!res.ok) throw new Error(json.error || `保存失败 (${res.status})`)
+      
       setOpen(false)
       await fetchList()
     } catch (e: any) {
-      alert(e.message)
+      console.error('Save error:', e)
+      alert(`保存失败: ${e.message}`)
     } finally { setLoading(false) }
   }
 

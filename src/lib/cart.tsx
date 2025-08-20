@@ -11,16 +11,23 @@ export type CartItem = {
   sku?: string | null
 }
 
+type CartContext = {
+  channel: string | null
+  tableId: string | null
+}
+
 type CartState = {
   items: CartItem[]
   currency: 'JPY'|'USD'
   open: boolean
   isLoaded: boolean
+  ctx: CartContext
   setOpen: (v: boolean) => void
   add: (item: Omit<CartItem, 'qty'>, qty?: number) => void
   updateQty: (id: string, qty: number) => void
   remove: (id: string) => void
   clear: () => void
+  setCtx: (ctx: Partial<CartContext>) => void
   count: number
   subtotal_cents: number
 }
@@ -32,6 +39,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([])
   const [open, setOpen] = useState(false)
   const [isLoaded, setIsLoaded] = useState(false)
+  const [ctx, setCtxState] = useState<CartContext>({ channel: null, tableId: null })
   const currency: 'JPY'|'USD' = 'JPY'
 
   // load from storage
@@ -82,10 +90,13 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       setItems(prev => prev.filter(x => x.id !== id))
     }
     const clear: CartState['clear'] = () => setItems([])
+    const setCtx: CartState['setCtx'] = (newCtx) => {
+      setCtxState(prev => ({ ...prev, ...newCtx }))
+    }
     const count = items.reduce((a,b) => a + b.qty, 0)
     const subtotal_cents = items.reduce((a,b) => a + b.qty * b.price_cents, 0)
-    return { items, currency, open, isLoaded, setOpen, add, updateQty, remove, clear, count, subtotal_cents }
-  }, [items, open, isLoaded])
+    return { items, currency, open, isLoaded, ctx, setCtx, setOpen, add, updateQty, remove, clear, count, subtotal_cents }
+  }, [items, open, isLoaded, ctx])
 
   return <CartCtx.Provider value={api}>{children}</CartCtx.Provider>
 }

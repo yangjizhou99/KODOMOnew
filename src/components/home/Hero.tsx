@@ -1,6 +1,19 @@
+'use client'
+import { useState } from 'react'
 import { t, Lang } from '../../lib/lang'
 
-export default function Hero({ lang }: { lang: Lang }) {
+export default function Hero({ lang, qrToken }: { lang: Lang; qrToken?: string }) {
+  const [showQRPrompt, setShowQRPrompt] = useState(false)
+
+  const handleQRClick = (e: React.MouseEvent) => {
+    if (!qrToken) {
+      e.preventDefault()
+      setShowQRPrompt(true)
+      // 3秒后自动隐藏提示
+      setTimeout(() => setShowQRPrompt(false), 3000)
+    }
+  }
+
   return (
     <section className="card overflow-hidden relative">
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-gray-100 via-white to-white" />
@@ -16,8 +29,26 @@ export default function Hero({ lang }: { lang: Lang }) {
             <a href={`/menu?lang=${lang}`} className="btn btn-primary">
               {t(lang, '立刻選餐', 'Shop Now')}
             </a>
-            <a href={`/qr/demo-table?lang=${lang}`} className="btn btn-outline">
+            <a 
+              href={`${qrToken ? `/qr/${encodeURIComponent(qrToken)}` : '#'}?lang=${lang}`} 
+              className="btn btn-outline relative"
+              onClick={handleQRClick}
+            >
               {t(lang, '掃碼點餐', 'QR Order')}
+              
+              {/* QR提示弹窗 */}
+              {showQRPrompt && !qrToken && (
+                <div className="absolute inset-0 bg-blue-50 border-2 border-blue-200 rounded-lg flex items-center justify-center z-10">
+                  <div className="text-center p-4">
+                    <div className="text-blue-600 font-semibold mb-2">
+                      📱 {t(lang,'請掃描桌上的二維碼','Please scan the QR code on your table')}
+                    </div>
+                    <div className="text-blue-500 text-sm">
+                      {t(lang,'掃描QR碼即可開始點餐','Scan the QR code to start ordering')}
+                    </div>
+                  </div>
+                </div>
+              )}
             </a>
           </div>
         </div>
